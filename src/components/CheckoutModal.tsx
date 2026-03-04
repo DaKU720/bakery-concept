@@ -6,22 +6,27 @@ import { X, Check } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export function CheckoutModal() {
-    const { isCheckoutOpen, closeCheckout, clearCart } = useCartStore();
+    const { isCheckoutOpen, closeCheckout, clearCart, deliveryMethod, setDeliveryMethod } = useCartStore();
     const [step, setStep] = useState(1);
-    const [formData, setFormData] = useState({ name: "", phone: "", email: "" });
+    const [formData, setFormData] = useState({
+        name: "", phone: "", email: "",
+        street: "", buildingNumber: "", postalCode: "", city: "Legionowo"
+    });
     const [showSoon, setShowSoon] = useState(false);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (step < 3) {
-            setStep(step + 1);
+            // Option to skip address validation if it's pickup
+            if (step === 1 && deliveryMethod === 'pickup') {
+                setStep(2);
+            } else {
+                setStep(step + 1);
+            }
         } else {
             setShowSoon(true);
             setTimeout(() => {
-                // clearCart();
-                // closeCheckout();
-                // setStep(1);
-                // setShowSoon(false);
+                // ...
             }, 5000);
         }
     };
@@ -32,14 +37,14 @@ export function CheckoutModal() {
                 <div className="fixed inset-0 z-50 bg-background overflow-hidden flex flex-col">
                     {/* Header */}
                     <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-white">
-                        <h2 className="text-xl font-black">Kasa (Krok {step}/3)</h2>
-                        <button onClick={closeCheckout} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                        <h2 id="checkout-modal-title" className="text-xl font-black">Kasa (Krok {step}/3)</h2>
+                        <button aria-label="Zamknij kasę" onClick={closeCheckout} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
                             <X size={24} />
                         </button>
                     </div>
 
-                    <div className="flex-1 overflow-y-auto p-6">
-                        <form id="checkout-form" onSubmit={handleSubmit} className="space-y-6 max-w-lg mx-auto">
+                    <div className="flex-1 overflow-y-auto p-6" role="dialog" aria-modal="true" aria-labelledby="checkout-modal-title">
+                        <form id="checkout-form" onSubmit={handleSubmit} className="space-y-6 max-w-lg mx-auto pb-20">
                             {step === 1 && (
                                 <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
                                     <h3 className="text-lg font-bold mb-4">1. Dane zamawiającego</h3>
@@ -67,15 +72,48 @@ export function CheckoutModal() {
                                             value={formData.email}
                                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                         />
-                                        <input
-                                            type="text"
-                                            required
-                                            placeholder="Pełny adres dostawy (ulica, nr, miejscowość)"
-                                            className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50"
-                                            // Ideally stored in another state like formData.address, expanding it inline:
-                                            value={(formData as any).address || ""}
-                                            onChange={(e: any) => setFormData({ ...formData, address: e.target.value } as any)}
-                                        />
+
+                                        {deliveryMethod === 'delivery' && (
+                                            <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100 space-y-4 mt-6">
+                                                <h4 className="font-bold text-sm text-foreground/80">Adres dostawy</h4>
+                                                <div className="flex gap-3">
+                                                    <input
+                                                        type="text"
+                                                        required={deliveryMethod === 'delivery'}
+                                                        placeholder="Ulica"
+                                                        className="w-2/3 bg-white border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                                                        value={formData.street}
+                                                        onChange={(e) => setFormData({ ...formData, street: e.target.value })}
+                                                    />
+                                                    <input
+                                                        type="text"
+                                                        required={deliveryMethod === 'delivery'}
+                                                        placeholder="Nr"
+                                                        className="w-1/3 bg-white border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                                                        value={formData.buildingNumber}
+                                                        onChange={(e) => setFormData({ ...formData, buildingNumber: e.target.value })}
+                                                    />
+                                                </div>
+                                                <div className="flex gap-3">
+                                                    <input
+                                                        type="text"
+                                                        required={deliveryMethod === 'delivery'}
+                                                        placeholder="Kod-poczt."
+                                                        className="w-1/3 bg-white border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                                                        value={formData.postalCode}
+                                                        onChange={(e) => setFormData({ ...formData, postalCode: e.target.value })}
+                                                    />
+                                                    <input
+                                                        type="text"
+                                                        required={deliveryMethod === 'delivery'}
+                                                        placeholder="Miasto"
+                                                        className="w-2/3 bg-white border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                                                        value={formData.city}
+                                                        onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                                                    />
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 </motion.div>
                             )}
@@ -84,18 +122,30 @@ export function CheckoutModal() {
                                 <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
                                     <h3 className="text-lg font-bold mb-4">2. Sposób odbioru</h3>
                                     <div className="space-y-3">
-                                        <label className="flex items-center gap-3 p-4 border border-primary/20 bg-primary/5 rounded-xl cursor-pointer">
-                                            <input type="radio" name="delivery" defaultChecked className="w-5 h-5 text-primary accent-primary" />
+                                        <label className={`flex items-center gap-3 p-4 border rounded-xl cursor-pointer transition-colors ${deliveryMethod === 'pickup' ? 'border-primary/50 bg-primary/5' : 'border-gray-200'}`}>
+                                            <input
+                                                type="radio"
+                                                name="delivery"
+                                                checked={deliveryMethod === 'pickup'}
+                                                onChange={() => setDeliveryMethod('pickup')}
+                                                className="w-5 h-5 text-primary accent-primary"
+                                            />
                                             <div>
                                                 <p className="font-bold">Odbiór osobisty w pracowni</p>
                                                 <p className="text-sm text-foreground/60">Legionowo, za darmo</p>
                                             </div>
                                         </label>
-                                        <label className="flex items-center gap-3 p-4 border border-gray-200 rounded-xl cursor-pointer">
-                                            <input type="radio" name="delivery" className="w-5 h-5 text-primary accent-primary" />
+                                        <label className={`flex items-center gap-3 p-4 border rounded-xl cursor-pointer transition-colors ${deliveryMethod === 'delivery' ? 'border-primary/50 bg-primary/5' : 'border-gray-200'}`}>
+                                            <input
+                                                type="radio"
+                                                name="delivery"
+                                                checked={deliveryMethod === 'delivery'}
+                                                onChange={() => setDeliveryMethod('delivery')}
+                                                className="w-5 h-5 text-primary accent-primary"
+                                            />
                                             <div>
-                                                <p className="font-bold">Dowóz (Legionowo)</p>
-                                                <p className="text-sm text-foreground/60">Od 15.00 zł</p>
+                                                <p className="font-bold">Dowóz</p>
+                                                <p className="text-sm text-foreground/60">Legionowo i okolice, 15.00 zł</p>
                                             </div>
                                         </label>
                                     </div>

@@ -1,0 +1,29 @@
+{
+    "name": "Słodka Ola - Piekarnia",
+    "short_name": "Słodka Ola",
+    "description": "Zamów swoje ulubione wypieki online z odbiorem własnym lub prosto do domu",
+    "start_url": "./",
+    "display": "standalone",
+    "background_color": "#FFFDF9",
+    "theme_color": "#E88D96",
+    "orientation": "portrait",
+    "icons": [
+        {
+            "src": "favicon.ico",
+            "sizes": "64x64 32x32 24x24 16x16",
+            "type": "image/x-icon"
+        },
+        {
+            "src": "favicon.ico",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "favicon.ico",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}

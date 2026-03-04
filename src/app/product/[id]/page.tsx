@@ -5,6 +5,12 @@ import { CartDrawer } from "@/components/CartDrawer";
 import { CheckoutModal } from "@/components/CheckoutModal";
 import { ProductClientView } from "./ProductClientView";
 
+export function generateStaticParams() {
+    return mockProducts.map((p) => ({
+        id: p.id,
+    }));
+}
+
 // Using a Promise for params for Next 15+ compatibility
 export default async function ProductPage({ params }: { params: Promise<{ id: string }> }) {
     const resolvedParams = await params;

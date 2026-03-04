@@ -14,7 +14,7 @@ export function TopNavbar() {
                 <div className="w-10"></div> {/* Spacer for centering */}
 
                 <div className="flex items-center gap-3">
-                    <img src="/images/logo.png" alt="Oli Emblem" className="w-10 h-10 rounded-full border-2 border-primary shadow-sm object-cover" />
+                    <img src={`${process.env.NODE_ENV === 'production' ? '/bakery-concept' : ''}/images/logo.png`} alt="Oli Emblem" className="w-10 h-10 rounded-full border-2 border-primary shadow-sm object-cover" />
                     <h1 className="text-xl font-bold tracking-tight">Słodka Ola</h1>
                 </div>
 

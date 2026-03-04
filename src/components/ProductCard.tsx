@@ -17,8 +17,8 @@ export function ProductCard({ product }: { product: Product }) {
         .reduce((acc, item) => acc + item.quantity, 0);
 
     return (
-        <div className={`bg-white rounded-2xl shadow-sm border border-orange-50/50 overflow-hidden flex flex-col h-full group ${product.isSoldOut ? 'opacity-75 grayscale-[0.5]' : ''}`}>
-            <Link href={`/product/${product.id}`} className="block relative aspect-[4/3] w-full bg-orange-50/30 overflow-hidden cursor-pointer">
+        <div className={`relative bg-white rounded-2xl shadow-sm border border-orange-50/50 overflow-hidden flex flex-col h-full group ${product.isSoldOut ? 'opacity-75 grayscale-[0.5]' : ''}`}>
+            <div className="block relative aspect-[4/3] w-full bg-orange-50/30 overflow-hidden">
                 <img
                     src={product.image}
                     alt={product.name}
@@ -31,16 +31,16 @@ export function ProductCard({ product }: { product: Product }) {
                         </span>
                     </div>
                 )}
-            </Link>
+            </div>
             <div className="p-4 flex flex-col flex-1">
-                <Link href={`/product/${product.id}`} className="font-bold text-lg mb-1 hover:text-primary transition-colors cursor-pointer block">
+                <Link href={`/product/${product.id}`} className="font-bold text-lg mb-1 hover:text-primary transition-colors cursor-pointer block after:absolute after:inset-0 after:z-0">
                     {product.name}
                 </Link>
                 <p className="text-foreground/70 text-sm mb-3 flex-1">
                     {product.description}
                 </p>
 
-                <div className="mt-auto">
+                <div className="mt-auto relative z-10">
                     <div className="flex items-center justify-between font-medium text-sm text-foreground/80 mb-3 bg-orange-50/50 p-2 rounded-lg">
                         <span className={product.isSoldOut ? 'line-through opacity-50' : ''}>{product.price.toFixed(2)} zł</span>
                         <span className="text-xs">{product.unit}</span>

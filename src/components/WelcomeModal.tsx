@@ -39,12 +39,16 @@ export function WelcomeModal() {
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.9, y: 20 }}
                             transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                            className="bg-white rounded-3xl shadow-2xl border border-gray-100 p-6 md:p-8 max-w-md w-full relative relative overflow-hidden"
+                            className="bg-white rounded-3xl shadow-2xl border border-gray-100 p-6 md:p-8 max-w-md w-full relative overflow-hidden"
+                            role="dialog"
+                            aria-modal="true"
+                            aria-labelledby="welcome-modal-title"
                         >
                             {/* Decorative background element */}
                             <div className="absolute -top-10 -right-10 w-32 h-32 bg-primary/10 rounded-full blur-2xl pointer-events-none"></div>
 
                             <button
+                                aria-label="Rozumiem"
                                 onClick={handleClose}
                                 className="absolute top-4 right-4 p-2 text-foreground/50 hover:text-foreground hover:bg-gray-100 rounded-full transition-colors z-10"
                             >
@@ -56,7 +60,7 @@ export function WelcomeModal() {
                                     <Wrench size={32} />
                                 </div>
 
-                                <h2 className="text-2xl font-black mb-3">Wersja Podglądowa</h2>
+                                <h2 id="welcome-modal-title" className="text-2xl font-black mb-3">Wersja Podglądowa</h2>
 
                                 <p className="text-foreground/70 mb-6 leading-relaxed">
                                     Witaj w domowej pracowni <strong>"Słodka Ola"</strong>! <br /><br />

@@ -12,9 +12,11 @@ interface CartStore {
     items: CartItem[];
     isCartOpen: boolean;
     isCheckoutOpen: boolean;
+    deliveryMethod: 'pickup' | 'delivery';
     addItem: (product: Product, quantity?: number, selectedOptions?: Record<string, string>, notes?: string) => void;
     removeItem: (cartItemId: string) => void;
     updateQuantity: (cartItemId: string, delta: number) => void;
+    setDeliveryMethod: (method: 'pickup' | 'delivery') => void;
     openCart: () => void;
     closeCart: () => void;
     openCheckout: () => void;
@@ -26,6 +28,8 @@ export const useCartStore = create<CartStore>((set) => ({
     items: [],
     isCartOpen: false,
     isCheckoutOpen: false,
+    deliveryMethod: 'pickup',
+    setDeliveryMethod: (method) => set({ deliveryMethod: method }),
     addItem: (product, quantity = 1, selectedOptions = {}, notes = "") => set((state) => {
         // Check if an item with exactly the same product ID, options, and notes already exists
         const existing = state.items.find(item =>

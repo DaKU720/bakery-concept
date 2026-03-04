@@ -6,7 +6,7 @@ export function Footer() {
             <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-10">
                 <div className="md:col-span-1">
                     <div className="flex items-center gap-3 mb-4">
-                        <img src="/images/logo.png" alt="Oli Emblem" className="w-12 h-12 rounded-full border-2 border-primary shadow-sm object-cover" />
+                        <img src={`${process.env.NODE_ENV === 'production' ? '/bakery-concept' : ''}/images/logo.png`} alt="Oli Emblem" className="w-12 h-12 rounded-full border-2 border-primary shadow-sm object-cover" />
                         <h2 className="text-xl font-black tracking-tight">Cukiernia "Słodka Ola"</h2>
                     </div>
                     <p className="text-foreground/70 text-sm mb-6 max-w-sm">
